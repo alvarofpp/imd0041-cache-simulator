@@ -8,10 +8,10 @@ public class Parse {
      *   String: comando válido | Integer: quantidade de argumentos.
      *   Exemplo: o comando "Read" exige "2" argumentos, o próprio "Read" e um extra.
      */
-    HashMap<String, Integer> words;
+    HashMap<String, Integer> comands;
 
     public Parse() {
-        words = new HashMap<String, Integer>() {{
+        comands = new HashMap<String, Integer>() {{
             put("Read", 2);
             put("Write", 3);
             put("Show", 1);
@@ -27,20 +27,20 @@ public class Parse {
         String inputs[] = input.split(" ");
 
         // Verifica se o comando existe
-        if (!this.words.containsKey(inputs[0])) {
+        if (!this.comands.containsKey(inputs[0])) {
             System.err.println("Comando '" + input + "' não existe!");
             return false;
         }
 
         // Verifica se a quantidade de argumentos extras está satisfazendo o comando
-        if (inputs.length != this.words.get(inputs[0])) {
+        if (inputs.length != this.comands.get(inputs[0])) {
             System.err.println("Comando '" + input + "' precisa de "
-                    + (this.words.get(inputs[0])-1) + " argumentos extras");
+                    + (this.comands.get(inputs[0])-1) + " argumentos extras");
             return false;
         }
 
         // Verifica se os argumentos extras são válidos
-        for (int i = 1; i < this.words.get(inputs[0]); i++) {
+        for (int i = 1; i < this.comands.get(inputs[0]); i++) {
             if (!this.isInteger(inputs[i])) {
                 System.err.println("Argumento '" + inputs[i] + "' é inválido!");
                 return false;
