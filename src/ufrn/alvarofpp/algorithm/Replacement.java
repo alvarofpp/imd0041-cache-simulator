@@ -29,7 +29,50 @@ public class Replacement {
     }
 
     /**
-     * Algoritmo LFU
+     * Algoritmo FIFO (First-In First-Out)
+     * @param cache
+     * @param address
+     */
+    public void FIFO(Cache cache, int address) {
+        // Bloco que o conteudo esta
+        int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
+
+        // Verifica se o bloco já está na cache
+        int line = cache.search(address);
+        if (line > -1) {
+            System.out.println("HIT linha " + line);
+            cache.addMissHit(1);
+            cache.aux[line] += 1;
+            return;
+        }
+
+        // Indice do primeiro a entrar usado
+        int firstInput = 0;
+
+        // Pega o último usado
+        for (int l = 1; l < cache.lines.length; l++) {
+            if (cache.aux[l] < cache.aux[firstInput]) {
+                firstInput = l;
+            }
+        }
+
+        // Pega o último a entrar
+        int maxValue = 0;
+        for (int l = 0; l < cache.lines.length; l++) {
+            if (cache.aux[l] > maxValue) {
+                maxValue = cache.aux[l];
+            }
+        }
+
+        cache.lines[firstInput] = block;
+        cache.aux[firstInput] = maxValue+1;
+        System.out.println("MISS -> alocado na linha " + firstInput
+                + " -> bloco " + cache.lines[firstInput] + " substituido");
+        cache.addMissHit(0);
+    }
+
+    /**
+     * Algoritmo LFU (Least-Frequently Used)
      * @param cache
      * @param address
      */
@@ -64,7 +107,7 @@ public class Replacement {
     }
 
     /**
-     * Algoritmo LRU
+     * Algoritmo LRU (Least-Recently Used)
      * @param cache
      * @param address
      */
