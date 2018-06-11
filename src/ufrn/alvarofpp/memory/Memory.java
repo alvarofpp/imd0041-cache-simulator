@@ -17,6 +17,9 @@ public class Memory {
         }
     }
 
+    /**
+     * Mostra toda a memória principal
+     */
     public void show() {
         System.out.println("MEMORIA PRINCIPAL");
         System.out.println("Bloco-Endereço-Conteúdo");
@@ -30,13 +33,25 @@ public class Memory {
         }
     }
 
+    /**
+     * Modifica o valor que está no endereço "address" por "value"
+     * @param address
+     * @param value
+     */
     public void setContent(int address, int value) {
         int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
         this.blocks[block][(address%this.qtdePalavras)] = value;
     }
 
+    /**
+     * Pega o conteudo que está no endereço "address"
+     * @param address
+     * @return
+     */
     public int getContent(int address) {
+        // Bloco que o endereço está
         int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
+        
         return this.blocks[block][(address%this.qtdePalavras)];
     }
 }
