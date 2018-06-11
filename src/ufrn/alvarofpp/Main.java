@@ -58,7 +58,10 @@ public class Main {
                         break;
                     case "Show":
                         cache.show();
+                        System.out.println();
                         memory.show();
+                        System.out.println();
+                        System.out.println("Taxa de hit: " + cache.hitPorcentagem() + "%");
                         break;
                 }
             }

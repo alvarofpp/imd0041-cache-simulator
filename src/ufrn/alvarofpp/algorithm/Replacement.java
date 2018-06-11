@@ -14,7 +14,7 @@ public class Replacement {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
         // Linha na cache que o conteudo pode estar
-        int lineCache = Integer.parseInt(String.valueOf(address%cache.qtdePalavras));
+        int lineCache = Integer.parseInt(String.valueOf(block%cache.qtdeLinhas));
 
         // Verifica se o conteudo já está na cache
         if (cache.lines[lineCache] == block) {
@@ -44,7 +44,7 @@ public class Replacement {
         if (line > -1) {
             System.out.println("HIT linha " + line);
             cache.addMissHit(1);
-            cache.use[line] += 1;
+            cache.aux[line] += 1;
             return;
         }
 
@@ -56,7 +56,7 @@ public class Replacement {
         }
 
         cache.lines[leastUsed] = block;
-        cache.use[leastUsed] = 1;
+        cache.aux[leastUsed] = 1;
         System.out.println("MISS -> alocado na linha " + leastUsed
                 + " -> bloco " + cache.lines[leastUsed] + " substituido");
         cache.addMissHit(0);
@@ -78,13 +78,13 @@ public class Replacement {
         if (line > -1) {
             System.out.println("HIT linha " + line);
             cache.addMissHit(1);
-            cache.use[line] += 1;
+            cache.aux[line] += 1;
             return;
         }
 
         // Pega o último usado
         for (int l = 1; l < cache.lines.length; l++) {
-            if (cache.use[l] < cache.use[lastUsed]) {
+            if (cache.aux[l] < cache.aux[lastUsed]) {
                 lastUsed = l;
             }
         }
@@ -92,13 +92,13 @@ public class Replacement {
         // Pega o mais usado
         int maxValue = 0;
         for (int l = 0; l < cache.lines.length; l++) {
-            if (cache.use[l] > maxValue) {
-                maxValue = cache.use[l];
+            if (cache.aux[l] > maxValue) {
+                maxValue = cache.aux[l];
             }
         }
 
         cache.lines[lastUsed] = block;
-        cache.use[lastUsed] = maxValue+1;
+        cache.aux[lastUsed] = maxValue+1;
         System.out.println("MISS -> alocado na linha " + lastUsed
                 + " -> bloco " + cache.lines[lastUsed] + " substituido");
         cache.addMissHit(0);

@@ -51,7 +51,7 @@ public class Cache {
      * LFU: Conterá a quantidade de vezes que cada linha foi usada.
      * LRU: Conterá a ordem de frequencia das linhas
      */
-    public Integer[] use;
+    public Integer[] aux;
 
     public Cache(Memory memory, int qtdePalavras, int qtdeLinhas,
                  int mapeamento, int associativo, int substituicao) {
@@ -63,10 +63,10 @@ public class Cache {
 
         this.missHit = new ArrayList<>(qtdeLinhas);
         this.lines = new Integer[qtdeLinhas];
-        this.use = new Integer[qtdeLinhas];
+        this.aux = new Integer[qtdeLinhas];
 
         for (int l = 0; l < this.qtdeLinhas; l++) {
-            this.use[l] = 0;
+            this.aux[l] = 0;
             this.lines[l] = -1;
         }
 
@@ -130,7 +130,7 @@ public class Cache {
             System.out.println("HIT linha " + line
                     + " -> novo valor de endereço " + address + "=" + value);
             this.missHit.add(1);
-            this.use[line] += 1;
+            this.aux[line] += 1;
         } else {
             System.out.println("MISS");
             this.missHit.add(0);
@@ -164,5 +164,21 @@ public class Cache {
      */
     public void addMissHit(int value) {
         this.missHit.add(value);
+    }
+
+    /**
+     * Calcula a taxa de hit até o momento solicitado
+     * @return Retorna a taxa de hit
+     */
+    public double hitPorcentagem() {
+        double count = 0;
+
+        for (int h = 0; h < this.missHit.size(); h++) {
+            if (this.missHit.get(h) == 1) {
+                count++;
+            }
+        }
+
+        return (count*100)/this.missHit.size();
     }
 }
