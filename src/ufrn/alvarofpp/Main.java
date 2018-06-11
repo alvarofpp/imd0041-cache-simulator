@@ -5,7 +5,6 @@ import ufrn.alvarofpp.memory.Memory;
 import ufrn.alvarofpp.parse.Parse;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -33,10 +32,37 @@ public class Main {
         }
 
         memory = new Memory(configNumbers.get(0), configNumbers.get(2));
-        cache = new Cache(configNumbers.get(0), configNumbers.get(1), memory);
+        cache = new Cache(memory, configNumbers.get(0), configNumbers.get(1),
+                configNumbers.get(3), configNumbers.get(4), configNumbers.get(5));
 
-        cache.show();
-        memory.show();
+        // Recebendo entradas do usuário
+        String input = "";
+        String inputs[];
+
+        while (!input.equals("Exit")) {
+            input = scanner.nextLine();
+
+            // Sair do simulador
+            if (input.equals("Exit")){
+                continue;
+            }
+
+            if (parse.validate(input)) {
+                inputs = input.split(" ");
+                switch (inputs[0]) {
+                    case "Read":
+                        cache.read(Integer.parseInt(inputs[1]));
+                        break;
+                    case "Write":
+                        cache.write(Integer.parseInt(inputs[1]), Integer.parseInt(inputs[2]));
+                        break;
+                    case "Show":
+                        cache.show();
+                        memory.show();
+                        break;
+                }
+            }
+        }
 
     }
 }

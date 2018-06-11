@@ -1,10 +1,5 @@
 package ufrn.alvarofpp.memory;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Iterator;
-
 public class Memory {
     int qtdeBlocos;
     int qtdePalavras;
@@ -35,7 +30,13 @@ public class Memory {
         }
     }
 
-    public int getContent(int block, int address) {
-        return this.blocks[block][address];
+    public void setContent(int address, int value) {
+        int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
+        this.blocks[block][(address%this.qtdePalavras)] = value;
+    }
+
+    public int getContent(int address) {
+        int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
+        return this.blocks[block][(address%this.qtdePalavras)];
     }
 }
