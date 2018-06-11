@@ -182,10 +182,12 @@ public class Cache {
         }
 
         if (this.missHit.get( this.missHit.size()-1 ) == 1) {
-            System.out.println("HIT linha " + returnLine);
+            System.out.println("HIT linha " + returnLine
+            + " -> novo valor do endereço " + address + "=" + value);
         } else {
             System.out.println("MISS -> alocado na linha " + returnLine
-                    + " -> bloco " + this.lines[returnLine] + " substituido");
+                    + " -> bloco " + this.lines[returnLine] + " substituido"
+                    + " -> novo valor do endereço " + address + "=" + value);
         }
     }
 
