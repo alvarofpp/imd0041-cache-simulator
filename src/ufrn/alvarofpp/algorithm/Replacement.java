@@ -36,8 +36,6 @@ public class Replacement {
     public void LFU(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
-        // Indice do menos usado
-        int leastUsed = 0;
 
         // Verifica se o bloco já está na cache
         int line = cache.search(address);
@@ -48,9 +46,12 @@ public class Replacement {
             return;
         }
 
+        // Indice do menos usado
+        int leastUsed = 0;
+
         // Pega o menos usado
         for (int l = 1; l < cache.qtdeLinhas; l++) {
-            if (cache.lines[l] < cache.lines[leastUsed]) {
+            if (cache.aux[l] < cache.aux[leastUsed]) {
                 leastUsed = l;
             }
         }
