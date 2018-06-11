@@ -1,16 +1,19 @@
 package ufrn.alvarofpp.memory;
 
+import ufrn.alvarofpp.algorithm.Replacement;
+
 import java.util.ArrayList;
+import java.util.Stack;
 
 public class Cache {
     /**
      * Quantidade de linhas que a cache conterá
      */
-    int qtdeLinhas;
+    public int qtdeLinhas;
     /**
      * Quantidade de palavras para cada linha da cache
      */
-    int qtdePalavras;
+    public int qtdePalavras;
     /**
      * Tipo de mapeamento
      * 1 - Direto
@@ -23,7 +26,7 @@ public class Cache {
      */
     int associativo;
     /**
-     * Algoritmo de substituição
+     * Algoritmo/politica de substituição
      * 1 - Aleatório
      * 2 - FIFO
      * 3 - LFU
@@ -33,7 +36,7 @@ public class Cache {
     /**
      * Linhas da memória cache
      */
-    Integer[] lines;
+    public Integer[] lines;
     /**
      * Memória principal
      */
@@ -45,10 +48,10 @@ public class Cache {
      */
     ArrayList<Integer> missHit;
     /**
-     * Conterá a quantidade de vezes que cada linha foi usada.
-     * Será usada para fazer a substituição LFU
+     * LFU: Conterá a quantidade de vezes que cada linha foi usada.
+     * LRU: Conterá a ordem de frequencia das linhas
      */
-    Integer[] use;
+    public Integer[] use;
 
     public Cache(Memory memory, int qtdePalavras, int qtdeLinhas,
                  int mapeamento, int associativo, int substituicao) {
@@ -89,59 +92,27 @@ public class Cache {
 
             auxEnd = this.qtdePalavras*this.lines[l];
             for (int e = auxEnd; e < (auxEnd+this.qtdePalavras); e++) {
-                System.out.println(l + " - " + this.lines[l] + " - " + e + " - " + this.memory.getContent(e));
+                System.out.println(l + " - " + this.lines[l] + " - " + e + " - "
+                        + this.memory.getContent(e));
             }
         }
     }
 
     /**
      * Ler o conteudo que está no endereço index
-     * @param index Endereço do conteudo que se quer ler
+     * @param address Endereço do conteudo que se quer ler
      */
-    public void read(Integer index) {
-        // Bloco que o conteudo estar
-        int block = Integer.parseInt(String.valueOf(index/this.qtdePalavras));
+    public void read(Integer address) {
+        // Algoritmo de substituição
+        Replacement replacement = new Replacement();
 
         if (this.mapeamento == 1) {
-            // Linha na cache que o conteudo pode estar
-            int lineCache = Integer.parseInt(String.valueOf(index%this.qtdePalavras));
-
-            // Verifica se o conteudo já está na cache
-            if (this.lines[lineCache] == block) {
-                System.out.println("HIT linha " + lineCache);
-                this.missHit.add(1);
-            } else {
-                this.lines[lineCache] = block;
-                System.out.println("MISS -> alocado na linha " + lineCache
-                        + " -> bloco " + this.lines[lineCache] + " substituido");
-                this.missHit.add(0);
-            }
+            replacement.direct(this, address);
         } else if (this.mapeamento == 2) {
-            if (this.substituicao == 3) {
-                int leastUsed = 0;
-
-                // Verifica se o bloco já está na cache
-                for (int l = 0; l < this.qtdeLinhas; l++) {
-                    if (this.lines[l] == block) {
-                        System.out.println("HIT linha " + l);
-                        this.missHit.add(1);
-                        this.use[l] += 1;
-                        return;
-                    }
-                }
-
-                // Pega o menos usado
-                for (int l = 1; l < this.qtdeLinhas; l++) {
-                    if (this.lines[l] < this.lines[leastUsed]) {
-                        leastUsed = l;
-                    }
-                }
-
-                this.lines[leastUsed] = block;
-                this.use[leastUsed] = 1;
-                System.out.println("MISS -> alocado na linha " + leastUsed
-                        + " -> bloco " + this.lines[leastUsed] + " substituido");
-                this.missHit.add(0);
+            switch (this.substituicao) {
+                case 3: replacement.LFU(this, address); break;
+                case 4: replacement.LRU(this, address); break;
+                default:break;
             }
         }
 
@@ -153,6 +124,45 @@ public class Cache {
      * @param value Valor
      */
     public void write(int address, int value) {
+        int line = this.search(address);
+
+        if (line != -1) {
+            System.out.println("HIT linha " + line
+                    + " -> novo valor de endereço " + address + "=" + value);
+            this.missHit.add(1);
+            this.use[line] += 1;
+        } else {
+            System.out.println("MISS");
+            this.missHit.add(0);
+        }
+
         this.memory.setContent(address, value);
+    }
+
+    /**
+     * Procura o endereço "address" na cache
+     * @param address Endereço
+     * @return Retorna a linha que o endereço se encontra ou -1 caso ela não esteja na cache
+     */
+    public int search(int address) {
+        // Bloco que o conteudo esta
+        int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
+        // Verifica se o bloco esta na cache
+        for (int l = 0; l < this.qtdeLinhas; l++) {
+            if (this.lines[l] == block) {
+                return l;
+            }
+        }
+
+        // Retorna -1 caso o bloco não esteja na cache
+        return -1;
+    }
+
+    /**
+     * Adiciona um valor ao ArrayList que contêm os Miss e Hit
+     * @param value
+     */
+    public void addMissHit(int value) {
+        this.missHit.add(value);
     }
 }
