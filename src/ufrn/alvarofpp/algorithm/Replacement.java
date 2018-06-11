@@ -2,6 +2,8 @@ package ufrn.alvarofpp.algorithm;
 
 import ufrn.alvarofpp.memory.Cache;
 
+import java.util.Random;
+
 public class Replacement {
     public Replacement(){}
 
@@ -26,6 +28,29 @@ public class Replacement {
                     + " -> bloco " + cache.lines[lineCache] + " substituido");
             cache.addMissHit(0);
         }
+    }
+
+    public void random(Cache cache, int address) {
+        // Bloco que o conteudo esta
+        int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
+
+        // Verifica se o bloco já está na cache
+        int line = cache.search(address);
+        if (line > -1) {
+            System.out.println("HIT linha " + line);
+            cache.addMissHit(1);
+            cache.aux[line] += 1;
+            return;
+        }
+
+        // Número aleatório
+        Random random = new Random();
+        int randomLine = random.nextInt(cache.qtdeLinhas);
+
+        cache.lines[randomLine] = block;
+        System.out.println("MISS -> alocado na linha " + randomLine
+                + " -> bloco " + cache.lines[randomLine] + " substituido");
+        cache.addMissHit(0);
     }
 
     /**

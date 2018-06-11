@@ -110,6 +110,7 @@ public class Cache {
             replacement.direct(this, address);
         } else if (this.mapeamento == 2) {
             switch (this.substituicao) {
+                case 1: replacement.random(this, address); break;
                 case 2: replacement.FIFO(this, address); break;
                 case 3: replacement.LFU(this, address); break;
                 case 4: replacement.LRU(this, address); break;
