@@ -106,16 +106,34 @@ public class Cache {
         // Algoritmo de substituição
         Replacement replacement = new Replacement();
 
+        //
+        int returnLine = 0;
+
         if (this.mapeamento == 1) {
-            replacement.direct(this, address);
+            returnLine = replacement.direct(this, address);
         } else if (this.mapeamento == 2) {
             switch (this.substituicao) {
-                case 1: replacement.random(this, address); break;
-                case 2: replacement.FIFO(this, address); break;
-                case 3: replacement.LFU(this, address); break;
-                case 4: replacement.LRU(this, address); break;
+                case 1:
+                    returnLine = replacement.random(this, address);
+                    break;
+                case 2:
+                    returnLine = replacement.FIFO(this, address);
+                    break;
+                case 3:
+                    returnLine = replacement.LFU(this, address);
+                    break;
+                case 4:
+                    returnLine = replacement.LRU(this, address);
+                    break;
                 default:break;
             }
+        }
+
+        if (this.missHit.get( this.missHit.size()-1 ) == 1) {
+            System.out.println("HIT linha " + returnLine);
+        } else {
+            System.out.println("MISS -> alocado na linha " + returnLine
+                    + " -> bloco " + this.lines[returnLine] + " substituido");
         }
 
     }

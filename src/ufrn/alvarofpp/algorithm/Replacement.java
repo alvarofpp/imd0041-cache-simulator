@@ -12,7 +12,7 @@ public class Replacement {
      * @param cache
      * @param address
      */
-    public void direct(Cache cache, int address) {
+    public int direct(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
         // Linha na cache que o conteudo pode estar
@@ -20,27 +20,25 @@ public class Replacement {
 
         // Verifica se o conteudo já está na cache
         if (cache.lines[lineCache] == block) {
-            System.out.println("HIT linha " + lineCache);
             cache.addMissHit(1);
         } else {
             cache.lines[lineCache] = block;
-            System.out.println("MISS -> alocado na linha " + lineCache
-                    + " -> bloco " + cache.lines[lineCache] + " substituido");
             cache.addMissHit(0);
         }
+
+        return lineCache;
     }
 
-    public void random(Cache cache, int address) {
+    public int random(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
 
         // Verifica se o bloco já está na cache
         int line = cache.search(address);
         if (line > -1) {
-            System.out.println("HIT linha " + line);
             cache.addMissHit(1);
             cache.aux[line] += 1;
-            return;
+            return line;
         }
 
         // Número aleatório
@@ -48,9 +46,9 @@ public class Replacement {
         int randomLine = random.nextInt(cache.qtdeLinhas);
 
         cache.lines[randomLine] = block;
-        System.out.println("MISS -> alocado na linha " + randomLine
-                + " -> bloco " + cache.lines[randomLine] + " substituido");
         cache.addMissHit(0);
+
+        return randomLine;
     }
 
     /**
@@ -58,17 +56,16 @@ public class Replacement {
      * @param cache
      * @param address
      */
-    public void FIFO(Cache cache, int address) {
+    public int FIFO(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
 
         // Verifica se o bloco já está na cache
         int line = cache.search(address);
         if (line > -1) {
-            System.out.println("HIT linha " + line);
             cache.addMissHit(1);
             cache.aux[line] += 1;
-            return;
+            return line;
         }
 
         // Indice do primeiro a entrar usado
@@ -91,9 +88,9 @@ public class Replacement {
 
         cache.lines[firstInput] = block;
         cache.aux[firstInput] = maxValue+1;
-        System.out.println("MISS -> alocado na linha " + firstInput
-                + " -> bloco " + cache.lines[firstInput] + " substituido");
         cache.addMissHit(0);
+
+        return firstInput;
     }
 
     /**
@@ -101,17 +98,16 @@ public class Replacement {
      * @param cache
      * @param address
      */
-    public void LFU(Cache cache, int address) {
+    public int LFU(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
 
         // Verifica se o bloco já está na cache
         int line = cache.search(address);
         if (line > -1) {
-            System.out.println("HIT linha " + line);
             cache.addMissHit(1);
             cache.aux[line] += 1;
-            return;
+            return line;
         }
 
         // Indice do menos usado
@@ -126,9 +122,9 @@ public class Replacement {
 
         cache.lines[leastUsed] = block;
         cache.aux[leastUsed] = 1;
-        System.out.println("MISS -> alocado na linha " + leastUsed
-                + " -> bloco " + cache.lines[leastUsed] + " substituido");
         cache.addMissHit(0);
+
+        return leastUsed;
     }
 
     /**
@@ -136,7 +132,7 @@ public class Replacement {
      * @param cache
      * @param address
      */
-    public void LRU(Cache cache, int address) {
+    public int LRU(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
         // Indice do último usado
@@ -145,10 +141,9 @@ public class Replacement {
         // Verifica se o bloco já está na cache
         int line = cache.search(address);
         if (line > -1) {
-            System.out.println("HIT linha " + line);
             cache.addMissHit(1);
             cache.aux[line] += 1;
-            return;
+            return line;
         }
 
         // Pega o último usado
@@ -168,8 +163,8 @@ public class Replacement {
 
         cache.lines[lastUsed] = block;
         cache.aux[lastUsed] = maxValue+1;
-        System.out.println("MISS -> alocado na linha " + lastUsed
-                + " -> bloco " + cache.lines[lastUsed] + " substituido");
         cache.addMissHit(0);
+
+        return lastUsed;
     }
 }
