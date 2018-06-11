@@ -106,7 +106,7 @@ public class Cache {
         // Algoritmo de substituição
         Replacement replacement = new Replacement();
 
-        //
+        // Variável para pegar linha atingida na cache
         int returnLine = 0;
 
         if (this.mapeamento == 1) {
@@ -147,16 +147,46 @@ public class Cache {
         int line = this.search(address);
 
         if (line != -1) {
-            System.out.println("HIT linha " + line
-                    + " -> novo valor de endereço " + address + "=" + value);
             this.missHit.add(1);
             this.aux[line] += 1;
         } else {
-            System.out.println("MISS");
             this.missHit.add(0);
         }
 
         this.memory.setContent(address, value);
+
+        // Substituição
+        Replacement replacement = new Replacement();
+
+        // Variável que terá a linha da cache atingida
+        int returnLine = 0;
+
+        if (this.mapeamento == 1) {
+            returnLine = replacement.direct(this, address);
+        } else if (this.mapeamento == 2) {
+            switch (this.substituicao) {
+                case 1:
+                    returnLine = replacement.random(this, address);
+                    break;
+                case 2:
+                    returnLine = replacement.FIFO(this, address);
+                    break;
+                case 3:
+                    returnLine = replacement.LFU(this, address);
+                    break;
+                case 4:
+                    returnLine = replacement.LRU(this, address);
+                    break;
+                default:break;
+            }
+        }
+
+        if (this.missHit.get( this.missHit.size()-1 ) == 1) {
+            System.out.println("HIT linha " + returnLine);
+        } else {
+            System.out.println("MISS -> alocado na linha " + returnLine
+                    + " -> bloco " + this.lines[returnLine] + " substituido");
+        }
     }
 
     /**
