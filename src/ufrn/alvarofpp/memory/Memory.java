@@ -1,8 +1,17 @@
 package ufrn.alvarofpp.memory;
 
 public class Memory {
+    /**
+     * Quantidade de blocos que a memória principal conterá
+     */
     int qtdeBlocos;
+    /**
+     * Quantidade de palavras para cada bloco da memória principal
+     */
     int qtdePalavras;
+    /**
+     * Blocos da memória principal
+     */
     Integer[][] blocks;
 
     public Memory(int qtdePalavras, int qtdeBlocos) {
@@ -18,7 +27,7 @@ public class Memory {
     }
 
     /**
-     * Mostra toda a memória principal
+     * Mostra o conteúdo de toda a memória principal
      */
     public void show() {
         System.out.println("MEMORIA PRINCIPAL");
@@ -35,8 +44,8 @@ public class Memory {
 
     /**
      * Modifica o valor que está no endereço "address" por "value"
-     * @param address
-     * @param value
+     * @param address Endereço
+     * @param value Valor
      */
     public void setContent(int address, int value) {
         int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
@@ -45,13 +54,13 @@ public class Memory {
 
     /**
      * Pega o conteudo que está no endereço "address"
-     * @param address
-     * @return
+     * @param address Endereço
+     * @return Retorna o conteúdo que o endereço contêm
      */
     public int getContent(int address) {
         // Bloco que o endereço está
         int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
-        
+
         return this.blocks[block][(address%this.qtdePalavras)];
     }
 }

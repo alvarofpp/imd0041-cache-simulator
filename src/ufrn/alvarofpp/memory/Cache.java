@@ -3,13 +3,46 @@ package ufrn.alvarofpp.memory;
 import java.util.ArrayList;
 
 public class Cache {
+    /**
+     * Quantidade de linhas que a cache conterá
+     */
     int qtdeLinhas;
+    /**
+     * Quantidade de palavras para cada linha da cache
+     */
     int qtdePalavras;
+    /**
+     * Tipo de mapeamento
+     * 1 - Direto
+     * 2 - Totalmente Associativo
+     * 3 - Parcialmente Associativo
+     */
     int mapeamento;
+    /**
+     * Para caso seja parcialmente associativo
+     */
     int associativo;
+    /**
+     * Algoritmo de substituição
+     * 1 - Aleatório
+     * 2 - FIFO
+     * 3 - LFU
+     * 4 - LRU
+     */
     int substituicao;
+    /**
+     * Linhas da memória cache
+     */
     Integer[] lines;
+    /**
+     * Memória principal
+     */
     Memory memory;
+    /**
+     * Salvar quando for HIT ou MISS
+     * 0 - MISS
+     * 1 - HIT
+     */
     ArrayList<Integer> missHit;
 
     public Cache(Memory memory, int qtdePalavras, int qtdeLinhas,
@@ -31,7 +64,7 @@ public class Cache {
     }
 
     /**
-     * Mostra toda a memória cache
+     * Mostra o conteúdo de toda a memória cache
      */
     public void show() {
         System.out.println("CACHE L1");
@@ -78,8 +111,8 @@ public class Cache {
 
     /**
      * Escreve na memória o valor "value" no endereço "address"
-     * @param address
-     * @param value
+     * @param address Endereço
+     * @param value Valor
      */
     public void write(int address, int value) {
         this.memory.setContent(address, value);
