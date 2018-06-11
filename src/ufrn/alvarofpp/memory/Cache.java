@@ -44,6 +44,11 @@ public class Cache {
      * 1 - HIT
      */
     ArrayList<Integer> missHit;
+    /**
+     * Conterá a quantidade de vezes que cada linha foi usada.
+     * Será usada para fazer a substituição LFU
+     */
+    Integer[] use;
 
     public Cache(Memory memory, int qtdePalavras, int qtdeLinhas,
                  int mapeamento, int associativo, int substituicao) {
@@ -52,11 +57,13 @@ public class Cache {
         this.mapeamento = mapeamento;
         this.associativo = associativo;
         this.substituicao = substituicao;
-        this.missHit = new ArrayList<>();
 
+        this.missHit = new ArrayList<>(qtdeLinhas);
         this.lines = new Integer[qtdeLinhas];
+        this.use = new Integer[qtdeLinhas];
 
         for (int l = 0; l < this.qtdeLinhas; l++) {
+            this.use[l] = 0;
             this.lines[l] = -1;
         }
 
@@ -94,19 +101,50 @@ public class Cache {
     public void read(Integer index) {
         // Bloco que o conteudo estar
         int block = Integer.parseInt(String.valueOf(index/this.qtdePalavras));
-        // Linha na cache que o conteudo pode estar
-        int lineCache = Integer.parseInt(String.valueOf(index%this.qtdePalavras));
 
-        // Verifica se o conteudo já está na cache
-        if (this.lines[lineCache] == block) {
-            System.out.println("HIT linha " + lineCache);
-            this.missHit.add(1);
-        } else {
-            this.lines[lineCache] = block;
-            System.out.println("MISS -> alocado na linha " + lineCache
-                    + " -> bloco " + this.lines[lineCache] + " substituido");
-            this.missHit.add(0);
+        if (this.mapeamento == 1) {
+            // Linha na cache que o conteudo pode estar
+            int lineCache = Integer.parseInt(String.valueOf(index%this.qtdePalavras));
+
+            // Verifica se o conteudo já está na cache
+            if (this.lines[lineCache] == block) {
+                System.out.println("HIT linha " + lineCache);
+                this.missHit.add(1);
+            } else {
+                this.lines[lineCache] = block;
+                System.out.println("MISS -> alocado na linha " + lineCache
+                        + " -> bloco " + this.lines[lineCache] + " substituido");
+                this.missHit.add(0);
+            }
+        } else if (this.mapeamento == 2) {
+            if (this.substituicao == 3) {
+                int leastUsed = 0;
+
+                // Verifica se o bloco já está na cache
+                for (int l = 0; l < this.qtdeLinhas; l++) {
+                    if (this.lines[l] == block) {
+                        System.out.println("HIT linha " + l);
+                        this.missHit.add(1);
+                        this.use[l] += 1;
+                        return;
+                    }
+                }
+
+                // Pega o menos usado
+                for (int l = 1; l < this.qtdeLinhas; l++) {
+                    if (this.lines[l] < this.lines[leastUsed]) {
+                        leastUsed = l;
+                    }
+                }
+
+                this.lines[leastUsed] = block;
+                this.use[leastUsed] = 1;
+                System.out.println("MISS -> alocado na linha " + leastUsed
+                        + " -> bloco " + this.lines[leastUsed] + " substituido");
+                this.missHit.add(0);
+            }
         }
+
     }
 
     /**
