@@ -29,6 +29,12 @@ public class Replacement {
         return lineCache;
     }
 
+    /**
+     * Algoritmo de aleatoriedade
+     * @param cache
+     * @param address
+     * @return
+     */
     public int random(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
@@ -39,6 +45,15 @@ public class Replacement {
             cache.addMissHit(1);
             cache.aux[line] += 1;
             return line;
+        }
+
+        // Verifica se existe algum espaço vazio na cache
+        for (int i = 0; i < cache.qtdeLinhas; i++) {
+            if (cache.lines[i] == -1) {
+                cache.addMissHit(0);
+                cache.lines[i] = block;
+                return i;
+            }
         }
 
         // Número aleatório
