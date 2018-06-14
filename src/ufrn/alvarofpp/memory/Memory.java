@@ -4,15 +4,15 @@ public class Memory {
     /**
      * Quantidade de blocos que a memória principal conterá
      */
-    int qtdeBlocos;
+    private int qtdeBlocos;
     /**
      * Quantidade de palavras para cada bloco da memória principal
      */
-    int qtdePalavras;
+    private int qtdePalavras;
     /**
      * Blocos da memória principal
      */
-    Integer[][] blocks;
+    private Integer[][] blocks;
 
     public Memory(int qtdePalavras, int qtdeBlocos) {
         this.qtdeBlocos = qtdeBlocos;
@@ -54,7 +54,7 @@ public class Memory {
 
     /**
      * Pega o conteudo que está no endereço "address"
-     * @param address Endereço
+     * @param address Endereço de memória
      * @return Retorna o conteúdo que o endereço contêm
      */
     public int getContent(int address) {

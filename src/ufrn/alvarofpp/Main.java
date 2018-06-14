@@ -18,8 +18,8 @@ public class Main {
         // Para validar as entradas
         Parse parse = new Parse();
         // Mémoria principal e cache
-        Memory memory = null;
-        Cache cache = null;
+        Memory memory;
+        Cache cache;
 
         final String CONFIG = "/home/roleta/IdeaProjects/imd0041_cache_simulator/src/ufrn/alvarofpp/memory/config.txt";
 

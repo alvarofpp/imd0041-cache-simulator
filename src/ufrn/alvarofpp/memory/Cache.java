@@ -3,7 +3,6 @@ package ufrn.alvarofpp.memory;
 import ufrn.alvarofpp.algorithm.Replacement;
 
 import java.util.ArrayList;
-import java.util.Stack;
 
 public class Cache {
     /**
@@ -20,11 +19,11 @@ public class Cache {
      * 2 - Totalmente Associativo
      * 3 - Parcialmente Associativo
      */
-    int mapeamento;
+    private int mapeamento;
     /**
      * Para caso seja parcialmente associativo
      */
-    int associativo;
+    private int associativo;
     /**
      * Algoritmo/politica de substituição
      * 1 - Aleatório
@@ -32,7 +31,7 @@ public class Cache {
      * 3 - LFU
      * 4 - LRU
      */
-    int substituicao;
+    private int substituicao;
     /**
      * Linhas da memória cache
      */
@@ -40,13 +39,13 @@ public class Cache {
     /**
      * Memória principal
      */
-    Memory memory;
+    private Memory memory;
     /**
      * Salvar quando for HIT ou MISS
      * 0 - MISS
      * 1 - HIT
      */
-    ArrayList<Integer> missHit;
+    private ArrayList<Integer> missHit;
     /**
      * LFU: Conterá a quantidade de vezes que cada linha foi usada.
      * LRU: Conterá a ordem de frequencia das linhas
@@ -79,7 +78,7 @@ public class Cache {
     public void show() {
         System.out.println("CACHE L1");
         System.out.println("Linha-Bloco-Endereço-Conteúdo");
-        int auxEnd = 0;
+        int auxEnd;
 
         for (int l = 0; l < this.qtdeLinhas; l++) {
             // Caso seja lixo
@@ -100,34 +99,11 @@ public class Cache {
 
     /**
      * Ler o conteudo que está no endereço index
-     * @param address Endereço do conteudo que se quer ler
+     * @param address Endereço de memória
      */
     public void read(Integer address) {
-        // Algoritmo de substituição
-        Replacement replacement = new Replacement();
-
         // Variável para pegar linha atingida na cache
-        int returnLine = 0;
-
-        if (this.mapeamento == 1) {
-            returnLine = replacement.direct(this, address);
-        } else if (this.mapeamento == 2) {
-            switch (this.substituicao) {
-                case 1:
-                    returnLine = replacement.random(this, address);
-                    break;
-                case 2:
-                    returnLine = replacement.FIFO(this, address);
-                    break;
-                case 3:
-                    returnLine = replacement.LFU(this, address);
-                    break;
-                case 4:
-                    returnLine = replacement.LRU(this, address);
-                    break;
-                default:break;
-            }
-        }
+        int returnLine = this.replacement(address);
 
         if (this.missHit.get( this.missHit.size()-1 ) == 1) {
             System.out.println("HIT linha " + returnLine);
@@ -140,7 +116,7 @@ public class Cache {
 
     /**
      * Escreve na memória o valor "value" no endereço "address"
-     * @param address Endereço
+     * @param address Endereço de memória
      * @param value Valor
      */
     public void write(int address, int value) {
@@ -155,31 +131,8 @@ public class Cache {
 
         this.memory.setContent(address, value);
 
-        // Substituição
-        Replacement replacement = new Replacement();
-
         // Variável que terá a linha da cache atingida
-        int returnLine = 0;
-
-        if (this.mapeamento == 1) {
-            returnLine = replacement.direct(this, address);
-        } else if (this.mapeamento == 2) {
-            switch (this.substituicao) {
-                case 1:
-                    returnLine = replacement.random(this, address);
-                    break;
-                case 2:
-                    returnLine = replacement.FIFO(this, address);
-                    break;
-                case 3:
-                    returnLine = replacement.LFU(this, address);
-                    break;
-                case 4:
-                    returnLine = replacement.LRU(this, address);
-                    break;
-                default:break;
-            }
-        }
+        int returnLine = this.replacement(address);
 
         if (this.missHit.get( this.missHit.size()-1 ) == 1) {
             System.out.println("HIT linha " + returnLine
@@ -212,7 +165,7 @@ public class Cache {
 
     /**
      * Adiciona um valor ao ArrayList que contêm os Miss e Hit
-     * @param value
+     * @param value Valor que se deseja adicionar ao missHit
      */
     public void addMissHit(int value) {
         this.missHit.add(value);
@@ -225,12 +178,39 @@ public class Cache {
     public double hitPorcentagem() {
         double count = 0;
 
-        for (int h = 0; h < this.missHit.size(); h++) {
-            if (this.missHit.get(h) == 1) {
+        for (Integer mh : this.missHit) {
+            if (this.missHit.get(mh) == 1) {
                 count++;
             }
         }
 
         return (count*100)/this.missHit.size();
+    }
+
+    private int replacement(int address) {
+        int lineHit = 0;
+        Replacement replacement = new Replacement();
+
+        if (this.mapeamento == 1) {
+            lineHit = replacement.direct(this, address);
+        } else if (this.mapeamento == 2) {
+            switch (this.substituicao) {
+                case 1:
+                    lineHit = replacement.random(this, address);
+                    break;
+                case 2:
+                    lineHit = replacement.fifo(this, address);
+                    break;
+                case 3:
+                    lineHit = replacement.lfu(this, address);
+                    break;
+                case 4:
+                    lineHit = replacement.lru(this, address);
+                    break;
+                default:break;
+            }
+        }
+
+        return lineHit;
     }
 }

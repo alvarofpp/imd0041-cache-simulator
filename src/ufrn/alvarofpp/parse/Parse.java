@@ -8,7 +8,7 @@ public class Parse {
      *   String: comando válido | Integer: quantidade de argumentos.
      *   Exemplo: o comando "Read" exige "2" argumentos, o próprio "Read" e um extra.
      */
-    HashMap<String, Integer> comands;
+    private HashMap<String, Integer> comands;
 
     public Parse() {
         comands = new HashMap<String, Integer>() {{
@@ -19,9 +19,9 @@ public class Parse {
     }
 
     /**
-     * Valida o input
-     * @param input
-     * @return
+     * Valida a entrada do usuário.
+     * @param input Entrada do usuário
+     * @return Retornar "true" se estiver válido, "falso" caso o contrário
      */
     public boolean validate(String input) {
         String inputs[] = input.split(" ");
@@ -51,11 +51,11 @@ public class Parse {
     }
 
     /**
-     * Verifica se o input é inteiro
-     * @param input
-     * @return
+     * Verifica se a entrada é um número inteiro.
+     * @param input Entrada que se deseja verificar
+     * @return "True" se for um número inteiro, "false" caso contrário.
      */
-    public boolean isInteger(String input) {
+    private boolean isInteger(String input) {
         try {
             Integer.parseInt(input);
             return true;

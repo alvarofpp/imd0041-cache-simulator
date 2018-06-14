@@ -5,12 +5,16 @@ import ufrn.alvarofpp.memory.Cache;
 import java.util.Random;
 
 public class Replacement {
+    /**
+     * Construtor.
+     * Como não possui variáveis, o construtor é vazio.
+     */
     public Replacement(){}
 
     /**
-     * Quando é mapeamento direto
-     * @param cache
-     * @param address
+     * Quando é mapeamento direto.
+     * @param cache Memória cache
+     * @param address Endereço de memória
      */
     public int direct(Cache cache, int address) {
         // Bloco que o conteudo esta
@@ -30,10 +34,10 @@ public class Replacement {
     }
 
     /**
-     * Algoritmo de aleatoriedade
-     * @param cache
-     * @param address
-     * @return
+     * Algoritmo de aleatoriedade.
+     * @param cache Memória cache
+     * @param address Endereço de memória
+     * @return Retorna a linha da cache afetada
      */
     public int random(Cache cache, int address) {
         // Bloco que o conteudo esta
@@ -67,11 +71,12 @@ public class Replacement {
     }
 
     /**
-     * Algoritmo FIFO (First-In First-Out)
-     * @param cache
-     * @param address
+     * Algoritmo FIFO (First-In First-Out).
+     * @param cache Memória cache
+     * @param address Endereço de memória
+     * @return Retorna a linha da cache afetada
      */
-    public int FIFO(Cache cache, int address) {
+    public int fifo(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
 
@@ -109,11 +114,12 @@ public class Replacement {
     }
 
     /**
-     * Algoritmo LFU (Least-Frequently Used)
-     * @param cache
-     * @param address
+     * Algoritmo LFU (Least-Frequently Used).
+     * @param cache Memória cache
+     * @param address Endereço de memória
+     * @return Retorna a linha da cache afetada
      */
-    public int LFU(Cache cache, int address) {
+    public int lfu(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
 
@@ -143,11 +149,12 @@ public class Replacement {
     }
 
     /**
-     * Algoritmo LRU (Least-Recently Used)
-     * @param cache
-     * @param address
+     * Algoritmo LRU (Least-Recently Used).
+     * @param cache Memória cache
+     * @param address Endereço de memória
+     * @return Retorna a linha da cache afetada
      */
-    public int LRU(Cache cache, int address) {
+    public int lru(Cache cache, int address) {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
         // Indice do último usado

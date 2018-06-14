@@ -4,10 +4,10 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class ParseTest {
+class ParseTest {
 
     @Test
-    public void validate() {
+    void validate() {
         Parse parse = new Parse();
 
         // Testes positivos
@@ -20,9 +20,5 @@ public class ParseTest {
         assertFalse(parse.validate("Show 25"));
         assertFalse(parse.validate("Read 2t"));
         assertFalse(parse.validate("Write 25 xx"));
-    }
-
-    @Test
-    public void isInteger() {
     }
 }
