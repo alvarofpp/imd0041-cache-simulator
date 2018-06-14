@@ -4,6 +4,9 @@ import ufrn.alvarofpp.memory.Cache;
 
 import java.util.Random;
 
+/**
+ * Serve para realizar os algoritmos de substituição na memória cache.
+ */
 public class Replacement {
     /**
      * Construtor.

@@ -2,6 +2,9 @@ package ufrn.alvarofpp.parse;
 
 import java.util.HashMap;
 
+/**
+ * Essa classe serve para validar as entradas do usuário.
+ */
 public class Parse {
     /**
      * As entradas válidas. Elas estão organizadas da seguinte maneira:

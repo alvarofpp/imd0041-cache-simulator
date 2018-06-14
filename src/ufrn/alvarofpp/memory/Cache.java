@@ -4,6 +4,9 @@ import ufrn.alvarofpp.algorithm.Replacement;
 
 import java.util.ArrayList;
 
+/**
+ * Serve para simular o comportamento de uma memória cache.
+ */
 public class Cache {
     /**
      * Quantidade de linhas que a cache conterá
@@ -187,6 +190,11 @@ public class Cache {
         return (count*100)/this.missHit.size();
     }
 
+    /**
+     * Realiza a operação de substituição de acordo com as configurações da cache.
+     * @param address Endereço de memória.
+     * @return Retorna a linha da cache que sofreu a ação.
+     */
     private int replacement(int address) {
         int lineHit = 0;
         Replacement replacement = new Replacement();
