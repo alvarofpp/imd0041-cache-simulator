@@ -48,7 +48,7 @@ public class Cache {
      * 0 - MISS
      * 1 - HIT
      */
-    private ArrayList<Integer> missHit;
+    public ArrayList<Integer> missHit;
     /**
      * LFU: Conterá a quantidade de vezes que cada linha foi usada.
      * LRU: Conterá a ordem de frequencia das linhas
@@ -63,7 +63,7 @@ public class Cache {
         this.associativo = associativo;
         this.substituicao = substituicao;
 
-        this.missHit = new ArrayList<>(qtdeLinhas);
+        this.missHit = new ArrayList<>();
         this.lines = new Integer[qtdeLinhas];
         this.aux = new Integer[qtdeLinhas];
 
@@ -128,8 +128,6 @@ public class Cache {
         if (line != -1) {
             this.missHit.add(1);
             this.aux[line] += 1;
-        } else {
-            this.missHit.add(0);
         }
 
         this.memory.setContent(address, value);
@@ -182,7 +180,7 @@ public class Cache {
         double count = 0;
 
         for (Integer mh : this.missHit) {
-            if (this.missHit.get(mh) == 1) {
+            if (mh == 1) {
                 count++;
             }
         }
