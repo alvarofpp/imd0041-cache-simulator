@@ -7,3 +7,8 @@ ministrado pelo professor Gustavo Girão Barreto da Silva.
 - [Álvaro Ferreira Pires de Paiva](https://github.com/alvarofpp)
   - Matrícula: 2016039162
   - E-mail: alvarofepipa@gmail.com
+  
+## Ferramentas usadas
+- [CheckStyle](): Para análise estática de código
+- [FindBugs](): Encontrar bugs
+- [JUnit](): Testes unitários
