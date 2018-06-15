@@ -1,6 +1,7 @@
-package ufrn.alvarofpp.parse;
+package ufrn.alvarofpp.tests;
 
 import org.junit.jupiter.api.Test;
+import ufrn.alvarofpp.parse.Parse;
 
 import static org.junit.jupiter.api.Assertions.*;
 
