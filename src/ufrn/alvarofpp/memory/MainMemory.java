@@ -3,30 +3,10 @@ package ufrn.alvarofpp.memory;
 /**
  * Serve para simular o comportamento da memória principal
  */
-public class Memory {
-    /**
-     * Quantidade de blocos que a memória principal conterá
-     */
-    private int qtdeBlocos;
-    /**
-     * Quantidade de palavras para cada bloco da memória principal
-     */
-    private int qtdePalavras;
-    /**
-     * Blocos da memória principal
-     */
-    private Integer[][] blocks;
+public class MainMemory extends MemoryBase {
 
-    public Memory(int qtdePalavras, int qtdeBlocos) {
-        this.qtdeBlocos = qtdeBlocos;
-        this.qtdePalavras = qtdePalavras;
-        this.blocks = new Integer[qtdeBlocos][qtdePalavras];
-
-        for (int b = 0; b < this.qtdeBlocos; b++) {
-            for (int e = 0; e < this.qtdePalavras; e++) {
-                this.blocks[b][e] = 0;
-            }
-        }
+    public MainMemory(int qtdePalavras, int qtdeBlocos) {
+        super(qtdePalavras, qtdeBlocos);
     }
 
     /**
@@ -39,7 +19,7 @@ public class Memory {
 
         for (int b = 0; b < this.qtdeBlocos; b++) {
             for (int e = 0; e < this.qtdePalavras; e++) {
-                System.out.println(b + " - " + count + " - " + this.blocks[b][e]);
+                System.out.println(b + " - " + count + " - " + this.dataBlocks[b][e]);
                 count++;
             }
         }
@@ -51,8 +31,9 @@ public class Memory {
      * @param value Valor
      */
     public void setContent(int address, int value) {
-        int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
-        this.blocks[block][(address%this.qtdePalavras)] = value;
+        int block = this.getIndexBlock(address);
+
+        this.dataBlocks[block][(address%this.qtdePalavras)] = value;
     }
 
     /**
@@ -61,9 +42,9 @@ public class Memory {
      * @return Retorna o conteúdo que o endereço contêm
      */
     public int getContent(int address) {
-        // Bloco que o endereço está
-        int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
+        // Bloco que o endereço esta
+        int block = this.getIndexBlock(address);
 
-        return this.blocks[block][(address%this.qtdePalavras)];
+        return this.dataBlocks[block][(address%this.qtdePalavras)];
     }
 }
