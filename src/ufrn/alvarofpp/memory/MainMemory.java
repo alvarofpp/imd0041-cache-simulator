@@ -1,4 +1,6 @@
-package ufrn.alvarofpp.memory;
+package ufrn.alvarofpp.memory.cache;
+
+import ufrn.alvarofpp.memory.MemoryBase;
 
 /**
  * Serve para simular o comportamento da memória principal
