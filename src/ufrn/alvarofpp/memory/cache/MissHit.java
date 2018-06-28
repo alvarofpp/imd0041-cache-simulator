@@ -31,6 +31,6 @@ public enum MissHit {
      * @return Valor guardado
      */
     public int getValue() {
-        return value;
+        return this.value;
     }
 }

@@ -16,15 +16,15 @@ public enum Mapeamento {
     /**
      * Tipo guardado
      */
-    private int type;
+    private int value;
 
     /**
      * Construtor
      *
-     * @param type Tipo de mapeamento
+     * @param value Tipo de mapeamento
      */
-    Mapeamento(int type) {
-        this.type = type;
+    Mapeamento(int value) {
+        this.value = value;
     }
 
     /**
@@ -32,8 +32,8 @@ public enum Mapeamento {
      *
      * @return Tipo guardado
      */
-    public int getType() {
-        return type;
+    public int getValue() {
+        return this.value;
     }
 
     /**
