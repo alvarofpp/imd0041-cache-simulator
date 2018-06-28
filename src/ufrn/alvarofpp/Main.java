@@ -21,7 +21,7 @@ public class Main {
         MainMemory mainMemory;
         Cache cache;
 
-        final String CONFIG = "/home/roleta/IdeaProjects/imd0041_cache_simulator/src/ufrn/alvarofpp/mainMemory/config.txt";
+        final String CONFIG = "/home/roleta/IdeaProjects/imd0041_cache_simulator/src/ufrn/alvarofpp/memory/configs/config.txt";
 
         BufferedReader buffer = new BufferedReader(new FileReader(CONFIG));
         String line;
@@ -43,7 +43,7 @@ public class Main {
             input = scanner.nextLine();
 
             // Sair do simulador
-            if (input.equals("Exit")){
+            if (input.equals("Exit")) {
                 continue;
             }
 
