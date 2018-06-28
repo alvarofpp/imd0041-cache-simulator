@@ -1,8 +1,8 @@
 package ufrn.alvarofpp.tests;
 
 import org.junit.jupiter.api.Test;
-import ufrn.alvarofpp.memory.Cache;
-import ufrn.alvarofpp.memory.Memory;
+import ufrn.alvarofpp.memory.MainMemory;
+import ufrn.alvarofpp.memory.cache.Cache;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -10,8 +10,8 @@ class CacheTest {
 
     @Test
     void search() {
-        Memory memory = new Memory(4, 16);
-        Cache cache = new Cache(memory, 4, 8, 1, 1, 1);
+        MainMemory mainMemory = new MainMemory(4, 16);
+        Cache cache = new Cache(mainMemory, 4, 8, 1, 1, 1);
 
         cache.read(0);
         cache.read(4);
@@ -33,8 +33,8 @@ class CacheTest {
 
     @Test
     void hitPorcentagem() {
-        Memory memory = new Memory(4, 16);
-        Cache cache = new Cache(memory, 4, 8, 1, 1, 1);
+        MainMemory mainMemory = new MainMemory(4, 16);
+        Cache cache = new Cache(mainMemory, 4, 8, 1, 1, 1);
 
         cache.write(4, 20);
         assertEquals(cache.hitPorcentagem(), 0.0);

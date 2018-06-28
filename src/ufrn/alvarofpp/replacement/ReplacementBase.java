@@ -9,7 +9,8 @@ public abstract class ReplacementBase {
 
     /**
      * Executa o algoritmo de substituição correspondente
-     * @param cache Memória cache
+     *
+     * @param cache   Memória cache
      * @param address Endereço de memória
      * @return Linha da cache que sofrerá a substituição
      */

@@ -3,40 +3,28 @@ package ufrn.alvarofpp.memory;
 /**
  * Caracteristicas básicas de toda memória
  */
-abstract class MemoryBase {
+public abstract class MemoryBase {
     /**
-     * Quantidade de blocos que a memória principal conterá
+     * Quantidade de blocos que a memória conterá
      */
-    int qtdeBlocos;
+    public int qtdeBlocos;
     /**
-     * Quantidade de palavras para cada bloco da memória principal
+     * Quantidade de palavras para cada bloco da memória
      */
-    int qtdePalavras;
-    /**
-     * Blocos da memória principal
-     */
-    Integer[][] dataBlocks;
+    protected int qtdePalavras;
 
-    MemoryBase(int qtdePalavras, int qtdeBlocos) {
+    public MemoryBase(int qtdePalavras, int qtdeBlocos) {
         this.qtdePalavras = qtdePalavras;
         this.qtdeBlocos = qtdeBlocos;
-
-        // Inicializa os dados na memória
-        this.dataBlocks = new Integer[qtdeBlocos][qtdePalavras];
-
-        for (int b = 0; b < this.qtdeBlocos; b++) {
-            for (int e = 0; e < this.qtdePalavras; e++) {
-                this.dataBlocks[b][e] = 0;
-            }
-        }
     }
 
     /**
      * Pega o indice do bloco que o endereço de memória se encontra
+     *
      * @param address Endereço de memória
      * @return Indice do bloco
      */
-    int getIndexBlock(int address) {
-        return Integer.parseInt(String.valueOf(address/this.qtdePalavras));
+    public int getBlock(int address) {
+        return Integer.parseInt(String.valueOf(address / this.qtdePalavras));
     }
 }

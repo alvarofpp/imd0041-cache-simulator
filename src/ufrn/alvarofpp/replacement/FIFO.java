@@ -1,6 +1,7 @@
 package ufrn.alvarofpp.replacement;
 
 import ufrn.alvarofpp.memory.cache.Cache;
+import ufrn.alvarofpp.memory.cache.MissHit;
 
 /**
  * Algoritmo FIFO (First-In First-Out)
@@ -9,12 +10,12 @@ public class FIFO extends ReplacementBase {
     @Override
     public int execute(Cache cache, int address) {
         // Bloco que o conteudo esta
-        int block = Integer.parseInt(String.valueOf(address/cache.qtdePalavras));
+        int block = cache.getBlock(address);
 
         // Verifica se o bloco já está na cache
         int line = cache.search(address);
         if (line > -1) {
-            cache.addMissHit(1);
+            cache.addMissHit(MissHit.HIT);
             cache.aux[line] += 1;
             return line;
         }
@@ -23,7 +24,7 @@ public class FIFO extends ReplacementBase {
         int firstInput = 0;
 
         // Pega o último usado
-        for (int l = 1; l < cache.lines.length; l++) {
+        for (int l = 1; l < cache.dataLines.length; l++) {
             if (cache.aux[l] < cache.aux[firstInput]) {
                 firstInput = l;
             }
@@ -31,15 +32,15 @@ public class FIFO extends ReplacementBase {
 
         // Pega o último a entrar
         int maxValue = 0;
-        for (int l = 0; l < cache.lines.length; l++) {
+        for (int l = 0; l < cache.dataLines.length; l++) {
             if (cache.aux[l] > maxValue) {
                 maxValue = cache.aux[l];
             }
         }
 
-        cache.lines[firstInput] = block;
-        cache.aux[firstInput] = maxValue+1;
-        cache.addMissHit(0);
+        cache.dataLines[firstInput] = block;
+        cache.aux[firstInput] = maxValue + 1;
+        cache.addMissHit(MissHit.MISS);
 
         return firstInput;
     }

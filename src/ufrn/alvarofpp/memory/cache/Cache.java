@@ -1,78 +1,82 @@
-package ufrn.alvarofpp.memory;
+package ufrn.alvarofpp.memory.cache;
 
-import ufrn.alvarofpp.algorithm.Replacement;
+import ufrn.alvarofpp.memory.MainMemory;
+import ufrn.alvarofpp.memory.MemoryBase;
+import ufrn.alvarofpp.replacement.*;
 
 import java.util.ArrayList;
 
 /**
- * Serve para simular o comportamento de uma memória cache.
+ * Serve para simular o comportamento de uma memória cache
  */
-public class Cache {
-    /**
-     * Quantidade de linhas que a cache conterá
-     */
-    public int qtdeLinhas;
-    /**
-     * Quantidade de palavras para cada linha da cache
-     */
-    public int qtdePalavras;
+public class Cache extends MemoryBase {
     /**
      * Tipo de mapeamento
-     * 1 - Direto
-     * 2 - Totalmente Associativo
-     * 3 - Parcialmente Associativo
      */
-    private int mapeamento;
+    private Mapeamento mapeamento;
     /**
      * Para caso seja parcialmente associativo
      */
     private int associativo;
     /**
      * Algoritmo/politica de substituição
-     * 1 - Aleatório
-     * 2 - FIFO
-     * 3 - LFU
-     * 4 - LRU
      */
-    private int substituicao;
-    /**
-     * Linhas da memória cache
-     */
-    public Integer[] lines;
+    private ReplacementBase substituicao;
     /**
      * Memória principal
      */
-    private Memory memory;
+    private MainMemory mainMemory;
     /**
      * Salvar quando for HIT ou MISS
-     * 0 - MISS
-     * 1 - HIT
      */
-    public ArrayList<Integer> missHit;
+    public ArrayList<MissHit> missHit;
     /**
      * LFU: Conterá a quantidade de vezes que cada linha foi usada.
      * LRU: Conterá a ordem de frequencia das linhas
      */
     public Integer[] aux;
+    /**
+     * Linhas de dados
+     */
+    public Integer[] dataLines;
 
-    public Cache(Memory memory, int qtdePalavras, int qtdeLinhas,
+    public Cache(MainMemory mainMemory, int qtdePalavras, int qtdeBlocos,
                  int mapeamento, int associativo, int substituicao) {
-        this.qtdeLinhas = qtdeLinhas;
-        this.qtdePalavras = qtdePalavras;
-        this.mapeamento = mapeamento;
+        super(qtdePalavras, qtdeBlocos);
+        this.mapeamento = Mapeamento.define(mapeamento);
         this.associativo = associativo;
-        this.substituicao = substituicao;
 
-        this.missHit = new ArrayList<>();
-        this.lines = new Integer[qtdeLinhas];
-        this.aux = new Integer[qtdeLinhas];
-
-        for (int l = 0; l < this.qtdeLinhas; l++) {
-            this.aux[l] = 0;
-            this.lines[l] = -1;
+        // Define o algoritmo de subsituição
+        if (this.mapeamento.equals(Mapeamento.DIRETO)) {
+            this.substituicao = new Direct();
+        } else {
+            Replacement replacement = Replacement.define(substituicao);
+            switch (replacement) {
+                case FIFO:
+                    this.substituicao = new FIFO();
+                    break;
+                case LFU:
+                    this.substituicao = new LFU();
+                    break;
+                case LRU:
+                    this.substituicao = new LRU();
+                    break;
+                default:
+                    this.substituicao = new Random();
+                    break;
+            }
         }
 
-        this.memory = memory;
+        this.missHit = new ArrayList<>();
+        this.dataLines = new Integer[qtdeBlocos];
+        this.aux = new Integer[qtdeBlocos];
+
+        for (int l = 0; l < this.qtdeBlocos; l++) {
+            this.aux[l] = 0;
+            this.dataLines[l] = -1;
+        }
+
+        this.mainMemory = mainMemory;
     }
 
     /**
@@ -83,19 +87,19 @@ public class Cache {
         System.out.println("Linha-Bloco-Endereço-Conteúdo");
         int auxEnd;
 
-        for (int l = 0; l < this.qtdeLinhas; l++) {
+        for (int l = 0; l < this.qtdeBlocos; l++) {
             // Caso seja lixo
-            if (this.lines[l] == -1) {
+            if (this.dataLines[l] == -1) {
                 for (int e = 0; e < this.qtdePalavras; e++) {
                     System.out.println(l + " -  -  - ");
                 }
                 continue;
             }
 
-            auxEnd = this.qtdePalavras*this.lines[l];
+            auxEnd = this.qtdePalavras*this.dataLines[l];
             for (int e = auxEnd; e < (auxEnd+this.qtdePalavras); e++) {
-                System.out.println(l + " - " + this.lines[l] + " - " + e + " - "
-                        + this.memory.getContent(e));
+                System.out.println(l + " - " + this.dataLines[l] + " - " + e + " - "
+                        + this.mainMemory.getContent(e));
             }
         }
     }
@@ -108,11 +112,11 @@ public class Cache {
         // Variável para pegar linha atingida na cache
         int returnLine = this.replacement(address);
 
-        if (this.missHit.get( this.missHit.size()-1 ) == 1) {
+        if (this.missHit.get( this.missHit.size()-1 ).equals(MissHit.HIT)) {
             System.out.println("HIT linha " + returnLine);
         } else {
             System.out.println("MISS -> alocado na linha " + returnLine
-                    + " -> bloco " + this.lines[returnLine] + " substituido");
+                    + " -> bloco " + this.dataLines[returnLine] + " substituido");
         }
 
     }
@@ -126,21 +130,21 @@ public class Cache {
         int line = this.search(address);
 
         if (line != -1) {
-            this.missHit.add(1);
+            this.missHit.add(MissHit.HIT);
             this.aux[line] += 1;
         }
 
-        this.memory.setContent(address, value);
+        this.mainMemory.setContent(address, value);
 
         // Variável que terá a linha da cache atingida
         int returnLine = this.replacement(address);
 
-        if (this.missHit.get( this.missHit.size()-1 ) == 1) {
+        if (this.missHit.get( this.missHit.size()-1 ).equals(MissHit.HIT)) {
             System.out.println("HIT linha " + returnLine
             + " -> novo valor do endereço " + address + "=" + value);
         } else {
             System.out.println("MISS -> alocado na linha " + returnLine
-                    + " -> bloco " + this.lines[returnLine] + " substituido"
+                    + " -> bloco " + this.dataLines[returnLine] + " substituido"
                     + " -> novo valor do endereço " + address + "=" + value);
         }
     }
@@ -154,8 +158,8 @@ public class Cache {
         // Bloco que o conteudo esta
         int block = Integer.parseInt(String.valueOf(address/this.qtdePalavras));
         // Verifica se o bloco esta na cache
-        for (int l = 0; l < this.qtdeLinhas; l++) {
-            if (this.lines[l] == block) {
+        for (int l = 0; l < this.qtdeBlocos; l++) {
+            if (this.dataLines[l] == block) {
                 return l;
             }
         }
@@ -166,10 +170,10 @@ public class Cache {
 
     /**
      * Adiciona um valor ao ArrayList que contêm os Miss e Hit
-     * @param value Valor que se deseja adicionar ao missHit
+     * @param mh Miss ou Hit
      */
-    public void addMissHit(int value) {
-        this.missHit.add(value);
+    public void addMissHit(MissHit mh) {
+        this.missHit.add(mh);
     }
 
     /**
@@ -179,8 +183,8 @@ public class Cache {
     public double hitPorcentagem() {
         double count = 0;
 
-        for (Integer mh : this.missHit) {
-            if (mh == 1) {
+        for (MissHit mh : this.missHit) {
+            if (mh.equals(MissHit.HIT)) {
                 count++;
             }
         }
@@ -194,29 +198,6 @@ public class Cache {
      * @return Retorna a linha da cache que sofreu a ação.
      */
     private int replacement(int address) {
-        int lineHit = 0;
-        Replacement replacement = new Replacement();
-
-        if (this.mapeamento == 1) {
-            lineHit = replacement.direct(this, address);
-        } else if (this.mapeamento == 2) {
-            switch (this.substituicao) {
-                case 1:
-                    lineHit = replacement.random(this, address);
-                    break;
-                case 2:
-                    lineHit = replacement.fifo(this, address);
-                    break;
-                case 3:
-                    lineHit = replacement.lfu(this, address);
-                    break;
-                case 4:
-                    lineHit = replacement.lru(this, address);
-                    break;
-                default:break;
-            }
-        }
-
-        return lineHit;
+        return this.substituicao.execute(this, address);
     }
 }

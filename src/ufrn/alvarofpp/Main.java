@@ -1,7 +1,7 @@
 package ufrn.alvarofpp;
 
-import ufrn.alvarofpp.memory.Cache;
-import ufrn.alvarofpp.memory.Memory;
+import ufrn.alvarofpp.memory.MainMemory;
+import ufrn.alvarofpp.memory.cache.Cache;
 import ufrn.alvarofpp.parse.Parse;
 
 import java.io.BufferedReader;
@@ -18,10 +18,10 @@ public class Main {
         // Para validar as entradas
         Parse parse = new Parse();
         // Mémoria principal e cache
-        Memory memory;
+        MainMemory mainMemory;
         Cache cache;
 
-        final String CONFIG = "/home/roleta/IdeaProjects/imd0041_cache_simulator/src/ufrn/alvarofpp/memory/config.txt";
+        final String CONFIG = "/home/roleta/IdeaProjects/imd0041_cache_simulator/src/ufrn/alvarofpp/mainMemory/config.txt";
 
         BufferedReader buffer = new BufferedReader(new FileReader(CONFIG));
         String line;
@@ -31,8 +31,8 @@ public class Main {
             configNumbers.add(Integer.parseInt(line));
         }
 
-        memory = new Memory(configNumbers.get(0), configNumbers.get(2));
-        cache = new Cache(memory, configNumbers.get(0), configNumbers.get(1),
+        mainMemory = new MainMemory(configNumbers.get(0), configNumbers.get(2));
+        cache = new Cache(mainMemory, configNumbers.get(0), configNumbers.get(1),
                 configNumbers.get(3), configNumbers.get(4), configNumbers.get(5));
 
         // Recebendo entradas do usuário
@@ -59,7 +59,7 @@ public class Main {
                     case "Show":
                         cache.show();
                         System.out.println();
-                        memory.show();
+                        mainMemory.show();
                         System.out.println();
                         System.out.println("Taxa de hit: " + cache.hitPorcentagem() + "%");
                         break;

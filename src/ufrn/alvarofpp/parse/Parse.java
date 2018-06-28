@@ -8,8 +8,8 @@ import java.util.HashMap;
 public class Parse {
     /**
      * As entradas válidas. Elas estão organizadas da seguinte maneira:
-     *   String: comando válido | Integer: quantidade de argumentos.
-     *   Exemplo: o comando "Read" exige "2" argumentos, o próprio "Read" e um extra.
+     * String: comando válido | Integer: quantidade de argumentos.
+     * Exemplo: o comando "Read" exige "2" argumentos, o próprio "Read" e um extra.
      */
     private HashMap<String, Integer> comands;
 
@@ -23,6 +23,7 @@ public class Parse {
 
     /**
      * Valida a entrada do usuário.
+     *
      * @param input Entrada do usuário
      * @return Retornar "true" se estiver válido, "falso" caso o contrário
      */
@@ -38,7 +39,7 @@ public class Parse {
         // Verifica se a quantidade de argumentos extras está satisfazendo o comando
         if (inputs.length != this.comands.get(inputs[0])) {
             System.err.println("Comando '" + input + "' precisa de "
-                    + (this.comands.get(inputs[0])-1) + " argumentos extras");
+                    + (this.comands.get(inputs[0]) - 1) + " argumentos extras");
             return false;
         }
 
@@ -55,6 +56,7 @@ public class Parse {
 
     /**
      * Verifica se a entrada é um número inteiro.
+     *
      * @param input Entrada que se deseja verificar
      * @return "True" se for um número inteiro, "false" caso contrário.
      */
@@ -62,8 +64,7 @@ public class Parse {
         try {
             Integer.parseInt(input);
             return true;
-        }
-        catch(Exception e) {
+        } catch (Exception e) {
             return false;
         }
     }
