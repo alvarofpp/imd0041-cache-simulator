@@ -1,7 +1,7 @@
 package ufrn.alvarofpp.memory;
 
 /**
- * Serve para simular o comportamento da memória principal.
+ * Serve para simular o comportamento da memória principal
  */
 public class Memory {
     /**
